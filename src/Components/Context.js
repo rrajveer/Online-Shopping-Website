@@ -89,16 +89,40 @@ class ProductProvider extends Component {
         })
         
     }
-    incrementHandler = () =>{
+    incrementHandler = (id) =>{
+        let tempCart = [...this.state.cart];
 
+        const selectedProduct = tempCart.find(item => item.id === id);
+        const index = tempCart.indexOf(selectedProduct);
+        const product = tempCart[index];
+
+        product.count=product.count +1;
+        product.total=(product.count)*(product.price);
         this.setState(() =>{
-            return{}
+            return{ total:product.total,count:product.count}
+        }, () =>{
+            this.addTotals();
         })
     }
-    decrementHandler = () =>{
+    decrementHandler = (id) =>{
 
+        let tempCart = [...this.state.cart];
+
+        const selectedProduct = tempCart.find(item => item.id === id);
+        const index = tempCart.indexOf(selectedProduct);
+        const product = tempCart[index];
+
+        product.count=product.count - 1;
+        if(product.count<0){
+            this.removeItemHandler(id);
+        }
+        else{
+        product.total=(product.count)*(product.price);
+        }
         this.setState(() =>{
-            return{}
+            return{ total:product.total,count:product.count}
+        }, () =>{
+            this.addTotals();
         })
     }
     clearCartHandler = () =>{
@@ -142,6 +166,7 @@ class ProductProvider extends Component {
             return { total:Total,tax:Tax,subTotal:subTotal}
         })
     }
+
  
     render() {
         return (
